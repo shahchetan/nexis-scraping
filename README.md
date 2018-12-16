@@ -29,3 +29,5 @@ This is the data scraping repository for scraping https://www.nexis.com
     - 'LexID(sm)', 'Address', 'Dates', 'Phone No'
   - relative.csv: Contains a table with columns as 
     - 'LexID(sm)', 'Name', 'AlterName', 'SSN', 'DOB'
+  - voter.csv: Contains a table with columns as
+    - 'LexID(sm)', 'Registration', 'Gender', 'Race'
