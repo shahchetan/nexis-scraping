@@ -8,12 +8,13 @@ def checkIsInRange(str):
             return True
     return False
 
-mainDf = pd.DataFrame(columns=('Full Name', 'Address', 'County', 'Phone', 'SSN', 'DOB', 'Gender', 'LexID(sm)', 'Email'))
+mainDf = pd.DataFrame(columns= ('Full Name', 'Address', 'County', 'Phone', 'SSN', 'DOB', 'Gender', 'LexID(sm)', 'Email'))
 mainAddressDf = pd.DataFrame(columns=('LexID(sm)', 'Address', 'Dates', 'Phone No'))
 mainRelativeDf = pd.DataFrame(columns=('LexID(sm)', 'Name', 'AlterName', 'SSN', 'DOB'))
+mainVoterDf = pd.DataFrame(columns=('LexID(sm)', 'Registration', 'Gender', 'Race'))
 
 idList = []
-for root,dirs, fileNames in os.walk('html',topdown=False):
+for root,dirs, fileNames in os.walk('html2',topdown=False):
     for file_ in fileNames:
         idList.append(os.path.join(root,file_))
 
@@ -39,6 +40,11 @@ for idpath in idList:
                 if "Address Summary" in tables[index][0][0]:
                     table_dict["Address Details"] = index+2
                     index+=3
+                elif "Voter Registrations" in tables[index][0][0]:
+                    rec = tables[index][0][0].split(" - ")[1].split(" ")[0].strip()
+                    print(rec)
+                    table_dict["Voter Registrations"] = (index+1, int(rec))
+                    index+=int(rec)+1
                 else:
                     table_dict[tables[index][0][0].split(" - ")[0].strip()] = index + 1
                     index+=2
@@ -46,10 +52,13 @@ for idpath in idList:
             index+=1
 
     # pprint(table_dict)
+    # break
 
 # Table 1: Contains Name, Address, County, Phone
     addressDf = pd.DataFrame(columns=('LexID(sm)', 'Address', 'Dates', 'Phone No'))
     relativeDf = pd.DataFrame(columns=('LexID(sm)', 'Name', 'AlterName', 'SSN', 'DOB'))
+    voterDf = pd.DataFrame(columns=('LexID(sm)', 'Registration', 'Gender', 'Race'))
+
     tables[1] = tables[1].reindex(tables[1].index.drop(0))
     tables[1] = tables[1].reset_index(drop=True)
     ceo_info = pd.concat([tables[0], tables[1]], axis=1, ignore_index=True)
@@ -105,8 +114,27 @@ for idpath in idList:
         mainRelativeDf = mainRelativeDf.append(relativeDf,ignore_index=True)
         # print ("\n***************************************************\n")
 
-mainDf.to_csv('main.csv')
-mainAddressDf.to_csv('address.csv')
-mainRelativeDf.to_csv('relative.csv')
+        if 'Voter Registrations' in table_dict:
+            nor = table_dict['Voter Registrations'][1]
+            c = 0
+            while c < nor:
+                vt = tables[table_dict['Voter Registrations'][0]+c]
+                registration = vt[0][0].split(': ')[-1].strip()
+                gen,race = None,None
+                for index, row in vt.iterrows():
+                    if "Gender:" in row[0]:
+                        gen = row[1]
+                    if "Race:" in row[0]:
+                        race = row[1]
+                r = [ceo_info['LexID(sm)'][1], registration, gen, race]
+                # print (r)
+                voterDf.loc[c] = r
+                c+=1
+                mainVoterDf = mainVoterDf.append(voterDf,ignore_index=True)
+
+mainDf.to_csv('main.csv',index=False)
+mainAddressDf.to_csv('address.csv',index=False)
+mainRelativeDf.to_csv('relative.csv',index=False)
+mainVoterDf.to_csv('voter.csv',index=False)
 
 
