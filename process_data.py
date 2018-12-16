@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from bs4 import BeautifulSoup
 from pprint import pprint
 
 def checkIsInRange(str):
@@ -19,9 +18,6 @@ for root,dirs, fileNames in os.walk('html',topdown=False):
         idList.append(os.path.join(root,file_))
 
 for idpath in idList:
-    #with open(idpath,'r') as outfile:
-    #    html_info = outfile.read()
-    #soup = BeautifulSoup(html_info, features="html.parser")
 
     table_dict = {}
     tables = pd.read_html(idpath,flavor='bs4') # Returns list of all tables on page
@@ -48,8 +44,6 @@ for idpath in idList:
                     index+=2
         else:
             index+=1
-
-    # print ("*******************************************************")
 
     # pprint(table_dict)
 
