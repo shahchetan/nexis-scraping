@@ -1,6 +1,6 @@
 from selenium import webdriver
 import time, sys
-import json
+import json,os
 
 driver = None
 win_handles = []
@@ -69,6 +69,8 @@ def main(args):
         driver = webdriver.Chrome()
         driver.get('https://www.nexis.com')
         time.sleep(5)
+        if not os.path.exists('html'):
+            os.makedirs('html')
         login()
         iterate(args[1])
         driver.close()
