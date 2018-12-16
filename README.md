@@ -12,12 +12,12 @@ This is the data scraping repository for scraping https://www.nexis.com
 *Steps for collecting HTML files:*
 
 - Keep all lexis-ids in a text file.
-- Generate a config file with name 'config.txt' the format as: {username:\<name\>, password: \<password\>}
+- Generate a config file with name 'config.json' the format as: {username:\<name\>, password: \<password\>}
 - This will be used in signing in website.
 - Use command python auto.py <file_name>
 - All the html files will be generates in html/ folder.
 
--Ensure all text files should be in the same directory as auto.py file.
+-Ensure all text and json files should be in the same directory as auto.py file.
 
 *Steps for parsing HTML files:*
 
