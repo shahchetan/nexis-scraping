@@ -5,6 +5,22 @@ import json,os
 driver = None
 win_handles = []
 
+def reset():
+    global win_handles
+    win_handles = driver.window_handles
+    if len(win_handles) == 2:
+        driver.switch_to_window(win_handles[-1])
+        driver.close()
+    driver.switch_to_window(win_handles[0])
+    driver.find_element_by_xpath('//*[@id="nexisnav_applicationmenu"]/ul/li[7]/button').click()
+    time.sleep(10)
+    win_handles = driver.window_handles
+    # print(win_handles)
+    driver.switch_to_window(win_handles[-1])
+    time.sleep(5)
+    iframe = driver.find_element_by_xpath("//iframe[@id='publicRecordsUrl']")
+    driver.switch_to_frame(iframe)
+    driver.find_element_by_xpath('//*[@href="FindAPerson.aspx"]').click()
 
 def login():
     global win_handles
@@ -52,7 +68,6 @@ def fetch_html(id):
     iframe = driver.find_element_by_xpath("//iframe[@id='publicRecordsUrl']")
     driver.switch_to_frame(iframe)
 
-
 def iterate(filename):
     with open(filename, 'r') as myfile:
         idlist = myfile.readlines()
@@ -61,7 +76,9 @@ def iterate(filename):
             fetch_html(id.strip())
         except Exception as e:
             print ("Error:",e," while downloading:", id.strip())
-            sys.exit()
+            with open('err.txt','a+') as errfile:
+                errfile.write(id.strip()+"\n")
+            reset()
 
 def main(args):
     if len(args) == 2:
