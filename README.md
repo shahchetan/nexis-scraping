@@ -15,7 +15,7 @@ This is the data scraping repository for scraping https://www.nexis.com
 - Generate a config file with name 'config.json' the format as: {username:\<name\>, password: \<password\>}
 - This will be used in signing in website.
 - Use command python auto.py <file_name>
-- All the html files will be generates in html/ folder.
+- All the html files will be generated in html/ folder.
 
 -Ensure all text and json files should be in the same directory as auto.py file.
 
